@@ -1,0 +1,238 @@
+swagger: '2.0'
+info:
+  description: |-
+    Digitalthinking Shool API reference for developers, teh error handler is implement using 
+     The IETF devised RFC 7807 effor, which creates a generalized error-handling schema.
+    https://tools.ietf.org/html/rfc7807
+  version: '1.0'
+  title: Digitalthinking Shool
+  termsOfService: 'http://www.linkedin.com/in/casotobotero'
+  contact:
+    name: Carlos Adrian Soto
+    email: 'https://digitalthinking.biz/es/udemy'
+  license:
+    name: sotobotero License
+    url: 'https://digitalthinking.biz/es/ada-enterprise-core#contactus'
+host: 'localhost:7080'
+basePath: /
+tags:
+  - name: Billing API
+    description: All apis relating to billing service
+  - name: Invoice
+    description: Make invoices
+paths:
+  /billing:
+    get:
+      tags:
+        - Billing API
+      summary: Return all transaction bundled into Response
+      description: Return 204 if no data found
+      operationId: listUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InvoiceResponse'
+        '204':
+          description: There are not transactions
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal error
+      security:
+        - JWT:
+            - global
+    post:
+      tags:
+        - Billing API
+      summary: post
+      operationId: postUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: input
+          description: input
+          required: true
+          schema:
+            $ref: '#/definitions/InvoiceRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - JWT:
+            - global
+  '/billing/{id}':
+    get:
+      tags:
+        - Billing API
+      summary: get
+      operationId: getUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/InvoiceResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - JWT:
+            - global
+    put:
+      tags:
+        - Billing API
+      summary: put
+      operationId: putUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - in: body
+          name: input
+          description: input
+          required: true
+          schema:
+            $ref: '#/definitions/InvoiceRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - JWT:
+            - global
+    delete:
+      tags:
+        - Billing API
+      summary: delete
+      operationId: deleteUsingDELETE
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - JWT:
+            - global
+securityDefinitions:
+  JWT:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  InvoiceRequest:
+    type: object
+    required:
+      - amount
+      - customer
+      - number
+    properties:
+      amount:
+        type: number
+        format: double
+        example: 3659.23
+      customer:
+        type: integer
+        format: int64
+        example: 1
+        description: Unique Id of customer taht represent the owner of invoice
+      detail:
+        type: string
+        example: Professional services
+      number:
+        type: string
+        example: 2548975
+        description: Bussines number that identified a invoice
+    title: InvoiceRequest
+    description: This model represent a Invoice data that user receive when make a request method
+  InvoiceResponse:
+    type: object
+    required:
+      - amount
+      - customer
+      - invoiceId
+      - number
+    properties:
+      amount:
+        type: number
+        format: double
+        example: 3659.23
+      customer:
+        type: integer
+        format: int64
+        example: 1
+        description: Unique Id of customer taht represent the owner of invoice
+      detail:
+        type: string
+        example: Professional services
+      invoiceId:
+        type: integer
+        format: int64
+        example: 2548975
+        description: Unique Id of invoice after it's created
+      number:
+        type: string
+        example: TFS2548975
+        description: Bussines number that identified a invoice
+    title: InvoiceResponse
+    description: This model represent a Invoice data that user should send on a request on post method
